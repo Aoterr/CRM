@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+	default-lazy-init="false">
+	<description>Spring RMI</description>
+	<!-- 配置分离   服务器配置 -->
+	<context:property-placeholder location="file:${global.config.path}remote.properties"
+		ignore-unresolvable="true" />
+	<!-- 配置分离   本地配置 -->
+	<!--<context:property-placeholder location="classpath*:/crm.properties"
+		ignore-unresolvable="true" />-->
+	<!-- CRM提供给Fortune的RMI服务配置 -->
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="service" ref="crmRmiService4FortuneImpl" /><!-- 服务类 -->
+		<property name="serviceName" value="crmRmiService4Fortune" /><!-- 服务名 -->
+		<property name="serviceInterface" value="com.zendaimoney.crm.rmi.service.CrmRmiService4Fortune" /><!-- 服务接口 -->
+		<property name="registryPort" value="${crm_4fortune_port}" /><!-- 服务端口 -->
+	</bean>
+	
+	<!-- CRM提供给AS的RMI服务配置 -->
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="service" ref="crmRmiService4ASImpl" /><!-- 服务类 -->
+		<property name="serviceName" value="crmRmiService4AS" /><!-- 服务名 -->
+		<property name="serviceInterface" value="com.zendaimoney.crm.rmi.service.CrmRmiService4AS" /><!-- 服务接口 -->
+		<property name="registryPort" value="${crm_4AS_port}" /><!-- 服务端口 -->
+	</bean>
+	
+	<!-- CRM提供给AS的RMI服务配置 -->
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="service" ref="crmRmiService4CreditImpl" /><!-- 服务类 -->
+		<property name="serviceName" value="crmRmiService4Credit" /><!-- 服务名 -->
+		<property name="serviceInterface" value="com.zendaimoney.crm.rmi.service.CrmRmiService4Credit" /><!-- 服务接口 -->
+		<property name="registryPort" value="${crm_4Credit_port}" /><!-- 服务端口 -->
+	</bean>
+	
+	<!-- CRM提供给APP的RMI服务配置 -->
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="service" ref="crmRmiService4AppImpl" /><!-- 服务类 -->
+		<property name="serviceName" value="crmRmiService4App" /><!-- 服务名 -->
+		<property name="serviceInterface" value="com.zendaimoney.crm.rmi.service.CrmRmiService4App" /><!-- 服务接口 -->
+		<property name="registryPort" value="${crm_4App_port}" /><!-- 服务端口 -->
+	</bean>
+	
+	<!-- CRM提供给Thumb2.0的RMI服务配置 -->
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="service" ref="crmRmiService4ThumbImpl" /><!-- 服务类 -->
+		<property name="serviceName" value="crmRmiService4Thumb" /><!-- 服务名 -->
+		<property name="serviceInterface" value="com.zendaimoney.crm.rmi.service.CrmRmiService4Thumb" /><!-- 服务接口 -->
+		<property name="registryPort" value="${crm_4Thumb_port}" /><!-- 服务端口 -->
+	</bean>
+	
+	<!-- Fortune RMI服务配置 -->
+	<bean id="icrmService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+        <!-- <property name="serviceUrl" value="rmi://172.16.230.212:9999/FortuneService4CRM" /> -->
+        <property name="serviceUrl" value="${fortune_4crm_url}" />
+        <property name="serviceInterface" value="com.zendaimoney.fortune.service.rmi.ICRMService" />
+        <property name="lookupStubOnStartup" value="false"></property>
+        <property name="refreshStubOnConnectFailure" value="true"></property>
+    </bean>
+    
+    <!-- credit RMI服务配置 -->
+   
+    <bean id="creditService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+		<property name="serviceUrl" value="${credit_4crm_url}" />
+		<property name="serviceInterface" value="com.zendaimoney.credit.rmi.ICreditService" />
+		<property name="lookupStubOnStartup" value="false"></property>
+		<property name="refreshStubOnConnectFailure" value="true"></property>
+	</bean>
+	
+	
+</beans>
